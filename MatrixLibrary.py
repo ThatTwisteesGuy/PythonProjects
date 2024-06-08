@@ -140,6 +140,7 @@ def multiply(A, x):
     for i in range(len(A)):
         for j in range(len(A[i])):
             A[i][j] = (A[i][j]) * x
+    return A
 
 def cofactorMatrix(A):
     X = generate(len(A), len(A[0]))
