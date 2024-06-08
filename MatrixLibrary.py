@@ -1,3 +1,5 @@
+from math import acos
+from math import sqrt
 
 def identity(n):
     I = generate(n, n)
@@ -85,7 +87,7 @@ def rotate(A):
     return Y
 
 
-def checkort(A):
+def isOrthogonal(A):
     idM = identity(len(A))
     idC = product(A, transpose(A))
 
@@ -96,7 +98,8 @@ def checkort(A):
                 return False
     return True
 
-def checksym(A):
+
+def isSymmetric(A):
     for i in range(len(A)-1):
         for j in range(i+1,len(A[i])):
             if (A[i][j] != A[j][i]):
@@ -114,11 +117,11 @@ def determinant(A):
     else:
         total = 0
         for i in range(len(A)):
-            total += A[0][i] * genCF(A, 0, i)
+            total += A[0][i] * genCofactor(A, 0, i)
         return total
 
 
-def genCF(A, x, y):
+def genCofactor(A, x, y):
     s = len(A)-1
     tA = copy(A)
     del (tA[x])
@@ -138,11 +141,11 @@ def multiply(A, x):
         for j in range(len(A[i])):
             A[i][j] = (A[i][j]) * x
 
-def cofactor(A):
+def cofactorMatrix(A):
     X = generate(len(A), len(A[0]))
     for i in range(len(A)):
         for j in range(len(A[i])):
-            (X[i][j]) = genCF(A, i, j)
+            (X[i][j]) = genCofactor(A, i, j)
     return X
 
 def swaprows(A, x1, x2):
@@ -155,10 +158,10 @@ def inverse(A):
     det = determinant(A)
     if det == 0:
         return None
-    inverse = divide(transpose(cofactor(A)), det)
+    inverse = divide(transpose(cofactorMatrix(A)), det)
     return inverse
 
-def solvesystem(A, v):
+def solveSystem(A, v):
     Ainv = inverse(A)
     if Ainv is None:
         print("System has inf solutions")
@@ -169,3 +172,48 @@ def solvesystem(A, v):
         return None
     else:
         return r
+
+
+def isVector(v):
+    if len(v[0]) == 1:
+        return True
+    else:
+        return False
+
+
+def dotProduct(v1, v2):
+    if (isVector(v1) == False) or (isVector(v2) == False):
+        print("Not a Vector!")
+        return None
+    if len(v1) != len(v2):
+        print("Mismatched Vectors!")
+        return None
+    sum = 0
+    for i in range(len(v1)):
+        sum += (v1[i][0])*(v2[i][0])
+    return sum
+
+
+def modulus(v):
+    l = len(v)
+    if isVector(v) == False:
+        print("Not a Vector!")
+        return None
+    sum = 0
+    for i in range(l):
+        sum += (v[i][0])*(v[i][0])
+    mod = sqrt(sum)
+    return mod
+
+
+def angleBetweenVectors(v1 , v2):
+    if (isVector(v1) == False) or (isVector(v2) == False):
+        print("Not a Vector!")
+        return None
+    value = (dotProduct(v1,v2)/(modulus(v1)*modulus(v2)))
+    if value > 1:
+        value = 1
+    elif value < -1:
+        value = -1
+    return acos(value)
+
