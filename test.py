@@ -1,6 +1,4 @@
-import MatrixLibrary.py
+import MatrixLibrary as Matrix
 
-A = generate(3,3)
-display(A)
-
-priny
+D = Matrix.generate(3,3)
+Matrix.display(D)
