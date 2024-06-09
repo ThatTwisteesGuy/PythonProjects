@@ -87,16 +87,22 @@ def rotate(A):
     return Y
 
 
+def roundMatrix(A, n):
+    for i in range(len(A)):
+        for j in range(len(A[0])):
+            round((A[i][i]), n)
+    return A
+
+
 def isOrthogonal(A):
     idM = identity(len(A))
     idC = product(A, transpose(A))
 
-    for i in range(len(A)):
-        for j in range(len(A[0])):
-            diff = abs((idC[i][j]) - (idM[i][j]))
-            if (diff >= 0.0001):
-                return False
-    return True
+    roundMatrix(idC, 6)
+    if idC == idM:
+        return True
+    else:
+        return False
 
 
 def isSymmetric(A):
@@ -149,7 +155,7 @@ def cofactorMatrix(A):
             (X[i][j]) = genCofactor(A, i, j)
     return X
 
-def swaprows(A, x1, x2):
+def swapRows(A, x1, x2):
     X = copy(A)
     X[x1] = A[x2]
     X[x2] = A[x1]

@@ -1,9 +1,7 @@
-import MatrixLibrary as Matrix
+from MatrixLibrary import *
 
-v1 = Matrix.generate(3,1)
-v2 = Matrix.generate(3,1)
-Matrix.populate(v1)
-Matrix.populate(v2)
-
-a = Matrix.angleBetweenVectors(v1, v2)
-print(a)
+v = generate(3,3)
+populate(v)
+divide(v, 3)
+display(v)
+print(isOrthogonal(v))
