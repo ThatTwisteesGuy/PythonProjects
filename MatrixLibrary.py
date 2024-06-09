@@ -44,7 +44,6 @@ def product(A, B):
         for j in range(cB):
             for k in range(cA):
                 C[i][j] += A[i][k] * B[k][j]
-
     return C
 
 
@@ -90,7 +89,7 @@ def rotate(A):
 def roundMatrix(A, n):
     for i in range(len(A)):
         for j in range(len(A[0])):
-            round((A[i][i]), n)
+            A[i][j] = round((A[i][j]), n)
     return A
 
 
