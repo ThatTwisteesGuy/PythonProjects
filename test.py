@@ -1,5 +1,5 @@
 from MatrixLibrary import *
 
-v = generate(6,6)
-populate(v)
-display(v)
+A = generate(3,3)
+populate(A)
+print(determinant(A))

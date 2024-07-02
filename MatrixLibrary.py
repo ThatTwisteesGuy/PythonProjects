@@ -1,6 +1,7 @@
 from math import acos
 from math import sqrt
 
+
 def identity(n):
     I = generate(n, n)
     for x in range(n):
@@ -135,17 +136,20 @@ def genCofactor(A, x, y):
     CF = determinant(tA)*(1+(-2*((x+y)%2)))
     return CF
 
+
 def divide(A, x):
     for i in range(len(A)):
         for j in range(len(A[i])):
             A[i][j] = (A[i][j]) / x
     return A
 
+
 def multiply(A, x):
     for i in range(len(A)):
         for j in range(len(A[i])):
             A[i][j] = (A[i][j]) * x
     return A
+
 
 def cofactorMatrix(A):
     X = generate(len(A), len(A[0]))
@@ -154,11 +158,13 @@ def cofactorMatrix(A):
             (X[i][j]) = genCofactor(A, i, j)
     return X
 
+
 def swapRows(A, x1, x2):
     X = copy(A)
     X[x1] = A[x2]
     X[x2] = A[x1]
     return X
+
 
 def inverse(A):
     det = determinant(A)
@@ -166,6 +172,7 @@ def inverse(A):
         return None
     inverse = divide(transpose(cofactorMatrix(A)), det)
     return inverse
+
 
 def solveSystem(A, v):
     Ainv = inverse(A)
