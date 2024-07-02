@@ -26,11 +26,17 @@ def genSolutions(n):
                     perms.append(tuple)
     return perms
 
-solutions = genSolutions(3066)
+n = 7208
+solutions = genSolutions(n)
 print(solutions)
 
 time.sleep(5)
+string = ("n = ")
+keyboard.type(string)
+keyboard.type(str(n))
+
 for i in range(len(solutions)):
-    keyboard.type(str(solutions[i]))
     keyboard.press(Key.enter)
     keyboard.release(Key.enter)
+    keyboard.type(str(solutions[i]))
+    time.sleep(0.1)
