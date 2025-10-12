@@ -25,7 +25,7 @@ TM2 = [
 v1 = [[1], [0], [0], [0], [0], [0]]
 v2 = [[1], [0], [0], [0], [0], [0]]
 
-t = 10
+t = 5
 for i in range(t):
     v1 = product(TM1, v1)
 for i in range(t):
