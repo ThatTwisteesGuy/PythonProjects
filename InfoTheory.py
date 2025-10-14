@@ -10,7 +10,7 @@ def checksum1(P):
         raise ValueError("Probabilities must sum to 1.")
 
 
-def Entropy(P):
+def getEntropy(P):
     checksum1(P)
     H = 0
     for i in range(len(P)):
@@ -61,8 +61,29 @@ def freqTable(Message, Dict, ProbForm=False):
     return F
 
 
-myDict = ['A', 'B']
-myString = "AAAAB"
+def encode(Message, Dict, SymbolsOut):
 
-freq = freqTable(myString, myDict, False)
-print(freq)
+    code = ""
+    maxLen = 0
+    for w in Dict:
+        if len(w) > maxLen:
+            maxLen = len(w)
+
+    n = min(len(Message), maxLen)
+    while(len(Message) > 0):
+
+        subMessage = Message[:n]
+
+        if (subMessage not in Dict):
+            n -= 1
+            if (n == 0):
+                print("Message not Encodable!")
+                return
+        else:
+            index = Dict.index(subMessage)
+            code += SymbolsOut[index]
+            Message = Message[n:]
+
+            n = min(len(Message), maxLen)
+
+    return code

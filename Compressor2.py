@@ -1,31 +1,38 @@
+from InfoTheory import getEntropy, encode, genString, freqTable
+
+P = [0.9, 0.1]
 oldDict = ['A', 'B']
-newDict = ["AAAA", "AA", "AB", "BA", "BB"]
-mySymbols = ['C', 'D', 'E', 'F', 'G']
+mySymbols = ["C", "D", "E", "F", "G", "H", "I", "J"]
 
 
-def encode(Message, Dict, Symbols):
+myMessage = genString(oldDict, P, 29999) + 'B'
 
-    code = ""
-    maxLen = 0
-    for w in newDict:
-        if len(w) > maxLen:
-            maxLen = len(w)
+print(myMessage)
 
-    while(len(Message) <= maxLen):
+newDict = ["AAA", "AAB", "ABA", "BAA", "ABB", "BAB", "BBA", "BBB"]
+binaryEncoding = ["1", "001", "010", "011", "00001", "00010", "00011", "00000"]
 
-        n = maxLen
-        subMessage = Message[:n]
+myCode = encode(myMessage, newDict, mySymbols)
+myBinary = encode(myCode, mySymbols, binaryEncoding)
 
-        if (subMessage not in newDict):
-            n -= 1
-            if (n == 0):
-                print("Message not Encodable!")
-                return
-        else:
-            index = newDict.index(subMessage)
-            code += Symbols[index]
+Lavg = len(myBinary)/len(myMessage)
+H = getEntropy(P)
 
-    return code
+efficiency = H/Lavg
 
-mycode = encode("AAAA", newDict, newDict)
-print(mycode)
+print(myBinary)
+
+print(efficiency)
+
+newDict = ["AAAAA","AAAAB","AAAB","AAB", "AB", "B"]
+binaryEncoding = ["0","11111", "11110", "1110", "110", "10"]
+
+myCode = encode(myMessage, newDict, mySymbols)
+myBinary = encode(myCode, mySymbols, binaryEncoding)
+
+Lavg = len(myBinary)/len(myMessage)
+H = getEntropy(P)
+
+efficiency = H/Lavg
+
+print(efficiency)
