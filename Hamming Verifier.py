@@ -69,11 +69,17 @@ def H16(A: str) -> str:
     B3 = FA(A[9], A[10], A[11])
     B4 = FA(A[12], A[13], A[14])
 
+    # 10 HAs
+
     CarrySin = B0[1] + B1[1] + B2[1] + B3[1] + B4[1]
     CarryS = HW(CarrySin)
 
+    # 5 HAs
+
     SumSin = B0[0] + B1[0] + B2[0] + B3[0] + B4[0] + A[15]
     SumS = HW(SumSin)
+
+    # 7 HAs
 
     SumS = SumS[::-1]
     CarryS = CarryS[::-1]
@@ -81,6 +87,8 @@ def H16(A: str) -> str:
     D = HA(SumS[1], CarryS[0])
     E = FA(D[1], SumS[2], CarryS[1])
     F = HA(E[1], CarryS[2])
+
+    # 4 HAs
 
     I = SumS[0] + D[0] + E[0] + F[0] + F[1]
 
