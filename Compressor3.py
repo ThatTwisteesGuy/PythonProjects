@@ -1,3 +1,5 @@
+import math
+
 import InfoTheory
 import InfoTheory as IT
 from math import pow
@@ -5,7 +7,7 @@ from math import pow
 n = 4
 cs = int(pow(2,n))
 
-P = [15/16, 1/16]
+P = [(cs-1)/cs, 1/cs]
 Dict = ['A', 'B']
 
 def encode_string(s: str, chunk_size) -> str:
@@ -20,7 +22,7 @@ def encode_string(s: str, chunk_size) -> str:
         # Step 2: For each 'B' in this chunk, append 0 + address
         for j, char in enumerate(chunk):
             if char == 'B':
-                address = f"{j:04b}"  # n-bit binary address
+                address = f"{j:010b}"  # n-bit binary address
                 code += "0" + address
 
     return code
@@ -61,32 +63,36 @@ def binary_to_int(binary_str: str) -> int:
     """Convert a binary string to integer."""
     return int(binary_str, 2)
 
-def int_to_bin(n: int) -> str:
-    return format(n & 0b11111, '05b')
+def int_to_bin(n: int, size: int) -> str:
+
+    if n < 0:
+        raise ValueError("Only non-negative integers are supported.")
+    if n >= (1 << size):
+        raise ValueError(f"Number {n} cannot be represented in {size} bits.")
+    return format(n, f'0{size}b')
 
 
-def encode(s):
+def encode(s, chunk_size):
     code = ""
     last_index = -1
+    add_pad = math.ceil(math.log2(chunk_size))+1
 
-    length = int(len(s)/16)
+    length = int(len(s)/chunk_size)
 
     for i in range(length):
-        chunk = s[0:16]
+        chunk = s[0:chunk_size]
         b_indexes = [i for i, c in enumerate(chunk) if c == 'B']
         if b_indexes:
             if (b_indexes[0] > last_index > -1):
                 code += '1'
             last_index = b_indexes[-1]
             for index in b_indexes:
-                address = int_to_bin(index)
+                address = int_to_bin(index, add_pad)
                 code += address
         else:
             code += '1'
-        s = s[16:]
+        s = s[chunk_size:]
     return code
-
-
 
 def decode(bitstream):
 
@@ -122,7 +128,7 @@ def decode(bitstream):
         message += current_chunk
     return message
 
-myString = InfoTheory.genString(Dict, P, cs*100000)
+
 
 '''
 print("Raw Data:")
@@ -144,25 +150,25 @@ print(decodedString1)
 
 print(decodedString2)
 '''
-myCode1 = encode_string(myString, cs)
-myCode2 = encode(myString)
-decodedString2 = decode(myCode2)
-if (decodedString2 == myString):
-    print("Yippee!!")
-else:
-    print("Shit!")
+
+##decodedString2 = decode(myCode2)
+##if (decodedString2 == myString):
+##    print("Yippee!!")
+##else:
+##    print("Shit!")
 
 
 print("Efficiencies:")
 
-
-A = len(myCode1)/len(myString)
-B = len(myCode2)/len(myString)
-
 H = IT.getEntropy(P)
-efficiency1 = H/A
-efficiency2 = H/B
 
-
-print(efficiency1)
-print(efficiency2)
+total = 0.0
+for i in range(50):
+    myString = InfoTheory.genString(Dict, P, cs * 10000)
+    myCode = encode(myString, cs)
+    B = len(myCode) / len(myString)
+    efficiency = H/B
+    total += efficiency
+    print(efficiency)
+total /= 50
+print("Average: ",total)

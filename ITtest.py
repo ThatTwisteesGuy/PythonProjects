@@ -1,8 +1,12 @@
-from math import pow
-import InfoTheory as IT
 
-P = [1/16, 15/16]
-H = IT.getEntropy(P)
-print(H)
+from InfoTheory import *
 
-print (H / (5.5/16))
+Dict = ['A','B']
+P = [0.9, 0.1]
+
+
+a = genArray(P, 10)
+print(a)
+s = genString(Dict, P, 10)
+print(s)
+print(getEntropy(P))

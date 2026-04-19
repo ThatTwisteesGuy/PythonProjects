@@ -28,6 +28,28 @@ def generate(m, n):
     return [[0 for j in range(n)] for i in range(m)]
 
 
+def vectorise(x):
+    s = len(x)
+    V = generate(s, 1)
+    for i in range(s):
+        V[i][0] = x[i]
+    return V
+
+
+def unvectorise(V):
+    s = len(V)
+    x = [0] * s
+    for i in range(s):
+        x[i] = V[i][0]
+    return x
+
+
+def addRow(M, V):
+    A = copy(M)
+    A.append(V[0])
+    return A
+
+
 def product(A, B):
     rA = len(A)
     cA = len(A[0])
@@ -230,3 +252,31 @@ def angleBetweenVectors(v1 , v2):
         value = -1
     return acos(value)
 
+
+def genLinearKernelMatrix(x, n):
+    s = len(x)
+    h = n-s
+    if (h < 0):
+        print("n Cannot be less than size of array!")
+        return None
+    z = x + [0]*h
+    M = vectorise(z)
+    M = transpose(M)
+    for i in range(h):
+        z = [z[-1]] + z[:-1]
+        A = vectorise(z)
+        A = transpose(A)
+        M = addRow(M, A)
+    return M
+
+
+def genCircularKernelMatrix(x):
+    s = len(x)
+    M = vectorise(x)
+    M = transpose(M)
+    for i in range(s-1):
+        x = [x[-1]] + x[:-1]
+        A = vectorise(x)
+        A = transpose(A)
+        M = addRow(M, A)
+    return transpose(M)

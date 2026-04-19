@@ -1,6 +1,6 @@
 from MatrixLibrary import *
 
-A = generate(3,3)
+A = generate(2,2)
 populate(A)
 
 display(A)

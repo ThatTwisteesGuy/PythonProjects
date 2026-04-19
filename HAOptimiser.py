@@ -94,3 +94,7 @@ def tr_MHAcount(n):
 def my_MHAcount(n):
     return PAHAcount((2*n)-1,n)
 
+
+n = 4
+print(tr_MHAcount(n))
+print(my_MHAcount(n))
