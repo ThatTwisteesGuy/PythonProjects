@@ -1,0 +1,12 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.fft import dct
+
+import random
+
+def generate_random_ints(n: int, min_val: int, max_val: int) -> list:
+
+    return [random.randint(min_val, max_val) for _ in range(n)]
+
+x = generate_random_ints(8, -32768, 32767)
+print(x)
