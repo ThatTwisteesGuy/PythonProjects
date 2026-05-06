@@ -15,15 +15,10 @@ def true_half_packed_dct(x):
     # and the odd indices of 'y' into the Imaginary part.
     z = y[::2] + 1j * y[1::2]
 
-    # z_re = [1000, -2000, 4000, 3000, 500, 2000, 7000, 5000]
-    # z_im = [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000]
-
-    # z = [complex(r, i) for r, i in zip(z_re, z_im)]
-
     print(z)
 
     # 2. N/2 POINT FFT
-    Z = np.fft.fft(z) / 8
+    Z = np.fft.fft(z) / 32
 
     print(Z)
 
@@ -41,16 +36,16 @@ def true_half_packed_dct(x):
 
     # Extract the separate FFTs of the real and imaginary parts
     # (This recovers the transform of y[::2] and y[1::2])
-    Z_even = 0.5 * (Z_k + Z_k_rev_conj)
-    Z_odd = -0.5j * (Z_k - Z_k_rev_conj)
+    Z_even = (Z_k + Z_k_rev_conj)
+    Z_odd = -1.0j * (Z_k - Z_k_rev_conj)
 
-    # Reconstruct the N-point FFT of the reordered sequence 'y'
-    twiddle_untangle = np.exp(-1j * 2 * np.pi * k / N)
-    Y = Z_even + Z_odd * twiddle_untangle
 
-    # Apply the final DCT-II phase shift
-    twiddle_dct = np.exp(-1j * np.pi * k / (2 * N))
-    X_dct = 2*np.real(Y * twiddle_dct)
+    A = Z_even * np.exp(-1j * 2 * np.pi * k / (4*N))
+    B = Z_odd * np.exp(-1j * 2 * np.pi * 5 * k / (4*N))
+
+    Y = A+B
+
+    X_dct = np.real(Y)
 
     return X_dct
 
@@ -63,7 +58,12 @@ def true_half_packed_dct(x):
 signal = np.array([4096, -1234,  18204, -32000,     85,  -9999,   2210,   -512,
            42, -5555,  12345, -12345,   7777,  -8888,    999,  -1111,
         25000, -4000,    123,   -321,  31000, -31000,     15,    -15,
-         8192, -8192,   4096,  -4096,   2048,  -2048,   1024,  -1024])
+         8192, -8192,   4096,  -4096,   2048,  -2048,   1024,  -1024,
+       4096, -1234, 18204, -32000, 85, -9999, 2210, -512,
+       42, -5555, 12345, -12345, 7777, -8888, 999, -1111,
+       25000, -4000, 123, -321, 31000, -31000, 15, -15,
+       8192, -8192, 4096, -4096, 2048, -2048, 1024, -1024
+                   ])
 
 
 my_packed_res = true_half_packed_dct(signal) / 1

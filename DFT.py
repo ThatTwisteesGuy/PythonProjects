@@ -1,50 +1,56 @@
 import numpy as np
-from scipy.fft import dct
-
-z_re = [800, -400, 2000, -1500, 100, -800, 1400, 0]
-z_im = [-100, 500, -1000, 1000, -2000, 700, 500, -100]
-
-z_re = [1200, -2300, 3100, -4500, 1100, 2700, -3300, 1900, -1400, 2200, 3600, -1800, 4200, -2900, 1500, -3100]
-z_im = [-1500, 3400, -2100, 1800, -4200, 1300, 2800, -3700, 1600, -2500, 3300, -1200, 2400, -3800, 1700, -2600]
+from scipy.fft import fft
 
 
-z_re = [1403, -2761,   892,  3145,  -104, -3872,  2156, -1533,
-          481,  2999, -3401,   112,  1784, -2250,   943,  -310,
-         2677, -1948,    55,  3812, -1205,  2334,  -844, -2991,
-         1500,   723, -3611,  2840,  -499,  1088, -2560,   319]
-z_im = [-855,  2410,  -137, -3322,  1945,   602, -2881,  1177,
-        -3904,   210,  2588, -1640,  3451,  -912, -2705,  1833,
-          -40,  3111, -1245, -3550,  2764,  -688,  1409, -2199,
-         3801,  -150,   922, -3177,  1655, -2408,   513,  2944]
+def analyze_vhdl_dft(in_re, in_im, vhdl_re, vhdl_im):
+    """
+    Compares VHDL DFT results against a SciPy reference.
 
-z_re = [3120, -1450,   890,  2211, -3455,   102,  -888,  1500,
-        -2001,  3340,  -567,  1988, -2400,   112,  2700, -3100,
-          950, -1800,  2900,  -350,  1400, -2600,  3150,   -80,
-        -1150,  2250, -3300,   450,  1850, -2950,   700,  3800,
-         -400,  1600, -2100,  3400,  -900,  1200, -2800,   500,
-         3600, -1300,  2500,  -150,  1900, -3200,   850,  2150,
-        -3700,   650,  1750, -2350,  3050, -1050,  1350, -2550,
-         3900,  -250,  2050, -3450,  1100,  2650, -1950,   350]
-z_im = [-1050,  2200, -3100,  1450,  -800,  3300, -1900,   600,
-         2800,  -150,  1650, -2400,  3550, -1150,   900, -2750,
-         3950,  -500,  2000, -3600,  1300,  3000, -2150,   750,
-        -3400,  1800,  -250,  2500, -1600,  3700,  -950,  1150,
-        -2900,   400,  2300, -3250,  1550,  -650,  3150, -1850,
-          850, -3800,  2700, -1350,  3450,  -200,  1950, -2650,
-         3850, -1000,  1700, -3500,  1400,  2950, -2250,   550,
-        -3050,  1250,  -700,  2450, -3900,  1050,  3650, -1750]
+    Parameters:
+    in_re, in_im     : Lists/arrays of the input real/imag parts
+    vhdl_re, vhdl_im : Lists/arrays of the VHDL output real/imag parts
+    """
 
-z_re = [0, 0, 0, 0]
-z_im = [4000, 32767, 32767, 32767]
+    scale_factor = 1/len(in_re)
 
-z = [complex(r, i) for r, i in zip(z_re, z_im)]
+    # 1. Convert separate parts into complex numpy arrays
+    input_signal = np.array(in_re, dtype=float) + 1j * np.array(in_im, dtype=float)
+    vhdl_results = np.array(vhdl_re, dtype=float) + 1j * np.array(vhdl_im, dtype=float)
 
-print(z)
+    # 2. Compute Reference using SciPy
+    # We apply the scale_factor to match the VHDL implementation's gain
+    ref_dft = fft(input_signal) * scale_factor
+
+    # 3. Compute Noise/Error
+    error_signal = ref_dft - vhdl_results
+
+    # 4. Compute Power
+    sig_power = np.mean(np.abs(ref_dft) ** 2)
+    noise_power = np.mean(np.abs(error_signal) ** 2)
+
+    # 5. Compute SNR
+    if noise_power < 1e-18:  # Effectively zero noise
+        snr_db = float('inf')
+    else:
+        snr_db = 10 * np.log10(sig_power / noise_power)
+
+    return {
+        "snr_db": snr_db,
+        "ref": ref_dft,
+        "actual": vhdl_results
+    }
 
 
+def display_results(input_re, input_im, vhdl_re_out, vhdl_im_out):
+    results = analyze_vhdl_dft(input_re, input_im, vhdl_re_out, vhdl_im_out)
 
+    print("-" * 30)
+    print(f"SNR Calculation Results")
+    print("-" * 30)
+    print(f"SNR:  {results['snr_db']:.2f} dB")
+    print("-" * 30)
 
-Z = np.fft.fft(z) / 4
-
-print(Z)
-
+    # Print Comparison
+    print("Bin | Reference (SciPy) | VHDL (Actual)")
+    for i in range(len(results['ref'])):
+        print(f" {i}  | {results['ref'][i]:15.1f} | {results['actual'][i]:15.1f}")
