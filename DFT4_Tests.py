@@ -38,8 +38,8 @@ display_results(input_re, input_im, vhdl_re_out, vhdl_im_out)
 input_re = [19280, -993, -29155, -6286]
 input_im = [20643, 16337, -4209, 1131]
 
-vhdl_re_out = []
-vhdl_im_out = []
+vhdl_re_out = [-4289,15910,-649,8307]
+vhdl_im_out = [8475,4889,-259,7536]
 
 display_results(input_re, input_im, vhdl_re_out, vhdl_im_out)
 
@@ -47,8 +47,8 @@ display_results(input_re, input_im, vhdl_re_out, vhdl_im_out)
 input_re = [-5252, 29225, -14093, 5491]
 input_im = [-29332, -6552, 14542, -30445]
 
-vhdl_re_out = []
-vhdl_im_out = []
+vhdl_re_out = [3842,8183,-13516,-3763]
+vhdl_im_out = [-12947,-16902,5551,-5035]
 
 display_results(input_re, input_im, vhdl_re_out, vhdl_im_out)
 
@@ -56,7 +56,7 @@ display_results(input_re, input_im, vhdl_re_out, vhdl_im_out)
 input_re = [7245, 18064, -23470, -14608]
 input_im = [-19448, -1440, -6090, 12743]
 
-vhdl_re_out = []
-vhdl_im_out = []
+vhdl_re_out = [-3193,4133,-4921,11224]
+vhdl_im_out = [-3559,-11508,-9211,4828]
 
 display_results(input_re, input_im, vhdl_re_out, vhdl_im_out)
